@@ -1,7 +1,6 @@
 package dev.lucasqueiroz.aoc2021
 
 class Day1 {
-
     init {
         part1()
         part2()
