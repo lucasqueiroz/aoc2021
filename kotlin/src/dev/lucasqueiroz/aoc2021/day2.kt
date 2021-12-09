@@ -4,7 +4,7 @@ import java.awt.Point
 
 class Day2 {
     init {
-//        part1()
+        part1()
         part2()
     }
 
