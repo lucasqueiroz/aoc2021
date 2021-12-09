@@ -1,10 +1,9 @@
 package dev.lucasqueiroz.aoc2021
 
-import dev.lucasqueiroz.aoc2021.getOrAdd
-
 class Day3 {
     init {
         Part1()
+        Part2()
     }
 
     class Part1 {
@@ -36,30 +35,15 @@ class Day3 {
         }
 
         private fun run() {
-            val lines = readLines(3)
+            val lines = readLines(3).toMutableList()
             val str = lines.joinToString("")
             val strLen = str.length / lines.size
             var gammaRate = ""
             var epsilonRate = ""
 
-            initBitList(strLen)
-
-            for(c in str) {
-                saveBit(c, strLen)
-            }
-
-            for(bit in bitPos) {
-                gammaRate += if(bit['0']!! > bit['1']!!) {
-                    "0"
-                } else {
-                    "1"
-                }
-
-                epsilonRate += if(bit['0']!! < bit['1']!!) {
-                    "0"
-                } else {
-                    "1"
-                }
+            for(i in 0 until strLen) {
+                gammaRate += findMostCommonInPos(lines, i)
+                epsilonRate += findLeastCommonInPos(lines, i)
             }
 
             val gammaRateDecimal = Integer.parseInt(gammaRate, 2)
@@ -67,6 +51,57 @@ class Day3 {
             println(gammaRateDecimal * epsilonRateDecimal)
         }
     }
+
+    class Part2() {
+
+        init {
+            run()
+        }
+
+        private fun run() {
+            val lines = readLines(3)
+
+            var o2Lines = lines.toMutableList()
+            var o2LinesSize = o2Lines.size
+            var co2Lines = lines.toMutableList()
+            var co2LinesSize = o2Lines.size
+            var i = 0
+            while(o2LinesSize > 1) {
+                val mostCommon = findMostCommonInPos(o2Lines, i)
+                o2Lines = o2Lines.filter { line -> line[i] == mostCommon }.toMutableList()
+                o2LinesSize = o2Lines.size
+                i++
+            }
+
+            i = 0
+            while(co2LinesSize > 1) {
+                val leastCommon = findLeastCommonInPos(co2Lines, i)
+                co2Lines = co2Lines.filter { line -> line[i] == leastCommon }.toMutableList()
+                co2LinesSize = co2Lines.size
+                i++
+            }
+
+            val o2Decimal = Integer.parseInt(o2Lines[0], 2)
+            val co2Decimal = Integer.parseInt(co2Lines[0], 2)
+            println(o2Decimal * co2Decimal)
+        }
+    }
+}
+
+private fun findMostCommonInPos(lines: MutableList<String>, pos: Int): Char {
+    var str = lines.map { line -> line[pos] }.joinToString("")
+    if(str.replace("0", "").length < str.replace("1", "").length) {
+        return '0'
+    }
+    return '1'
+}
+
+private fun findLeastCommonInPos(lines: MutableList<String>, pos: Int): Char {
+    var str = lines.map { line -> line[pos] }.joinToString("")
+    if(str.replace("0", "").length < str.replace("1", "").length) {
+        return '1'
+    }
+    return '0'
 }
 
 fun main() {
